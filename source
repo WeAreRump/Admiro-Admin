@@ -122,6 +122,16 @@ UserInputService.InputBegan:Connect(function(input,chat)
 	end
 end)
 
+UserInputService.InputBegan:Connect(function(input,chat)
+	if input.KeyCode == Enum.KeyCode.Escape and not chat then
+		if CommandBar:IsFocused() then
+			tweenframe(CommandBarMain, 0.402, 0, 1, 0)
+			wait(0.2)
+			CommandBar.Text = ""
+		end
+	end
+end)
+
 AGMouse.KeyDown:Connect(function(key)
 	if key == Prefix then
 		CommandBar:CaptureFocus()
