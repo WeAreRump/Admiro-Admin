@@ -1,0 +1,137 @@
+if AG_LOADED and not _G.AG_DEBUG == true then return end
+
+pcall(function() getgenv().AG_LOADED = true end)
+
+while not game:IsLoaded() or not game:GetService("CoreGui") or not game:GetService("Players") or not game:GetService("UserInputService") or not game:GetService("RunService") do wait() end
+
+Players = game:GetService("Players")
+UserInputService = game:GetService("UserInputService")
+RunService = game:GetService("RunService")
+
+CommandBarMain = Instance.new("Frame")
+CommandBar = Instance.new("TextBox")
+
+function randomstring()
+	local length = math.random(10,20)
+	local array = {}
+	for i = 1, length do
+		array[i] = string.char(math.random(32, 126))
+	end
+	return table.concat(array)
+end
+
+COREGUI = game:GetService("CoreGui")
+PARENT = nil
+if (not is_sirhurt_closure) and (syn and syn.protect_gui) then
+	local AdmiroGui = Instance.new("ScreenGui")
+	AdmiroGui.Name = randomstring()
+	syn.protect_gui(AdmiroGui)
+	AdmiroGui.Parent = COREGUI
+	PARENT = AdmiroGui
+elseif get_hidden_gui or gethui then
+	local hiddenUI = get_hidden_gui or gethui
+	local AdmiroGui = Instance.new("ScreenGui")
+	AdmiroGui.Name = randomstring()
+	AdmiroGui.Parent = hiddenUI()
+	PARENT = AdmiroGui
+elseif COREGUI:FindFirstChild('RobloxGui') then
+	PARENT = COREGUI.RobloxGui
+else
+	local AdmiroGui = Instance.new("ScreenGui")
+	AdmiroGui.Name = randomstring()
+	AdmiroGui.Parent = COREGUI
+	PARENT = AdmiroGui
+end
+
+CommandBarMain.Name = randomstring()
+CommandBarMain.Parent = PARENT
+CommandBarMain.BackgroundColor3 = Color3.fromRGB(48, 48, 48)
+CommandBarMain.BorderSizePixel = 0
+CommandBarMain.Position = UDim2.new(0.40200001, 0, 0.782999992, 0)
+CommandBarMain.Size = UDim2.new(0, 300, 0, 30)
+
+CommandBar.Name = "CommandBar"
+CommandBar.Parent = CommandBarMain
+CommandBar.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+CommandBar.BackgroundTransparency = 1.000
+CommandBar.Position = UDim2.new(0.0222222898, 0, 0.200000003, 0)
+CommandBar.Size = UDim2.new(0, 293, 0, 18)
+CommandBar.ClearTextOnFocus = false
+CommandBar.Font = Enum.Font.SourceSans
+CommandBar.PlaceholderColor3 = Color3.fromRGB(255, 255, 255)
+CommandBar.PlaceholderText = "Command Bar"
+CommandBar.Text = ""
+CommandBar.TextColor3 = Color3.fromRGB(255, 255, 255)
+CommandBar.TextScaled = true
+CommandBar.TextSize = 14.000
+CommandBar.TextWrapped = true
+CommandBar.TextXAlignment = Enum.TextXAlignment.Left
+
+AGMouse = Players.LocalPlayer:GetMouse()
+Prefix = ";"
+
+function tweenframe(frame, x1, x2, z1, z2) frame:TweenPosition(UDim2.new(x1, x2, z1, z2),"Out","Quart",0.2) end
+
+NoclipRunning = false
+
+UserInputService.InputBegan:Connect(function(input,chat)
+	if input.KeyCode == Enum.KeyCode.Return or input.KeyCode == Enum.KeyCode.KeypadEnter and not chat then
+		if CommandBar.Text == "noclip" then
+			NoclipRunning = true
+		end
+
+		if CommandBar.Text == "clip" then
+			NoclipRunning = false
+		end
+		
+		if CommandBar.Text == "superspeed" or CommandBar.Text == "speed" then
+			Players.LocalPlayer.Character.Humanoid.WalkSpeed = 150
+		end
+		
+		if CommandBar.Text == "defaultspeed" or CommandBar.Text == "dspeed" or CommandBar.Text == "ds" or CommandBar.Text == "normalspeed" or CommandBar.Text == "nspeed" or CommandBar.Text == "ns" then
+			Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16
+		end
+		
+		if CommandBar.Text == "superjump" or CommandBar.Text == "sjump" then
+			Players.LocalPlayer.Character.Humanoid.JumpPower = 100
+		end
+		
+		if CommandBar.Text == "defaultjumppower" or CommandBar.Text == "djumppower" or CommandBar.Text == "djpower" or CommandBar.Text == "djp" or CommandBar.Text == "normaljumppower" or CommandBar.Text == "njumppower" or CommandBar.Text == "njpower" or CommandBar.Text == "njp" then
+			Players.LocalPlayer.Character.Humanoid.WalkSpeed = 50
+		end
+		
+		if CommandBar.Text == "dex" or CommandBar.Text == "explorer" then
+			loadstring(game:HttpGet("https://pastebin.com/raw/7m5dcczN"))()
+		end
+		
+		if CommandBar.Text == "exit" or CommandBar.Text == "shutdown" or CommandBar.Text == "leave" then
+			game:Shutdown()
+		end
+		
+		if CommandBar.Text == "freeze" then
+			Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").Anchored = true
+		end
+		
+		if CommandBar.Text == "unfreeze" then
+			Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").Anchored = false
+		end
+
+		tweenframe(CommandBarMain, 0.402, 0, 1, 0)
+		wait(0.2)
+		CommandBar.Text = ""
+	end
+end)
+
+AGMouse.KeyDown:Connect(function(key)
+	if key == Prefix then
+		CommandBar:CaptureFocus()
+		spawn(function() repeat CommandBar.Text = "" until CommandBar.Text == "" end)
+		tweenframe(CommandBarMain, 0.402, 0, 0.783, 0)
+	end
+end)
+
+RunService.Stepped:Connect(function()
+	if NoclipRunning then
+		game.Players.LocalPlayer.Character.Humanoid:ChangeState(11)
+	end
+end)
